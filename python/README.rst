@@ -49,7 +49,7 @@ Install SHT10 library::
  # cd rpiSht1x-1.2/
  # python setup.py install
 
-Test SHT10 library and sensor; install python test code for SHT and MPU sensors:
+Test SHT10 library and sensor; install python test code for SHT and MPU sensors::
 
  # git clone git@github.com:VCTLabs/pi-sensor-test.git
  # cp pi-sensor-test/Sht1x-test.py /usr/local/bin/
@@ -87,17 +87,17 @@ Upstream Sources and Related Info
 Python tools (mostly libraries) and test code used for the individual sensors
 on the sensor stick:
 
+ * BMP085 Pressure/Temperature/Altimeter sensor
 
-1) BMP085 Pressure/Temperature/Altimeter sensor
-   https://github.com/adafruit/Adafruit_Python_BMP sensor module depends on 
-   https://github.com/adafruit/Adafruit_Python_GPIO (wrapper for RPi.GPIO)
+  - https://github.com/adafruit/Adafruit_Python_BMP sensor module depends on 
+  - https://github.com/adafruit/Adafruit_Python_GPIO (wrapper for RPi.GPIO)
 
 Insall manually with setup.py, will pull Adafruit_Python_GPIO if needed.
 
+ * SHT10 Humidity/Temperature sensor
 
-2) SHT10 Humidity/Temperature sensor
-   https://pypi.python.org/pypi/rpiSht1x/1.2  SHT10 sensor module depends on
-   https://pypi.python.org/pypi/RPi.GPIO/0.4.1a RPi GPIO module, python-spidev
+  - https://pypi.python.org/pypi/rpiSht1x/1.2  SHT10 sensor module depends on
+  - https://pypi.python.org/pypi/RPi.GPIO/0.4.1a RPi GPIO module, python-spidev
 
 Test code for invoking rpiSht1x needs to set the DATA/CLOCK pins using the
 physical pin positions (required by RPi.GPIO) so 3 and 5 are SDA1 and SCL1.
@@ -111,8 +111,9 @@ like previously installed packages for BMP, not sure yet what got b0rked.  The
 sht1x lib should probably be ported to the AdaFruit wrapper interface.
 
 
-3) MPU-6050 Gyroscope and Accelerometer (plus Temp)
-   http://blog.bitify.co.uk/2013/11/reading-data-from-mpu-6050-on-raspberry.html
+ * MPU-6050 Gyroscope and Accelerometer (plus Temp)
+
+  - http://blog.bitify.co.uk/2013/11/reading-data-from-mpu-6050-on-raspberry.html
 
 This is not technically an i2c device, but uses the smbus subset and the
 python-smbus module.  The smbus number in the test code is actually the i2c
