@@ -64,22 +64,21 @@ Test MPU smbus interface and sensor::
  # cp pi-sensor-test/mpu-6050.py /usr/local/bin/
  # mpu-6050.py
 
-Expected output shows no gyro data, weird values for accel/rotation, and no
-temperature output::
+Expected output so far is just gyro/accel, with no temperature output::
 
  gyro data
  ---------
- gyro_xout:  0  scaled:  0
- gyro_yout:  0  scaled:  0
- gyro_zout:  0  scaled:  0
+ gyro_xout:  141  scaled:  1
+ gyro_yout:  294  scaled:  2
+ gyro_zout:  -116  scaled:  -1
  
  accelerometer data
  ------------------
- accel_xout:  -756  scaled:  -0.046142578125
- accel_yout:  -16072  scaled:  -0.98095703125
- accel_zout:  -2156  scaled:  -0.131591796875
- x rotation:  -81.9093660192
- y rotation:  2.66923789033
+ accel_xout:  -476  scaled:  -0.029052734375
+ accel_yout:  -16088  scaled:  -0.98193359375
+ accel_zout:  -2284  scaled:  -0.139404296875
+ x rotation:  -81.7485192341
+ y rotation:  1.6779160025
 
 Upstream Sources and Related Info
 =================================
