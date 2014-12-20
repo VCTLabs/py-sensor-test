@@ -10,7 +10,7 @@ simple invocation:
     $ sudo python AS3935-monitor.py
 
 error logging invocation:
-    $ sudo python -u AS3935-monitor.py > >(tee output.log) 2> >(tee error.log >&2)
+    $ sudo python -u AS3935-monitor.py > >(tee -a output.log) 2> >(tee error.log >&2)
 
 Licensed under the GNU General Public License (GPL) version 2 or greater.
 Copyright 2014 Vanguard Computer Technology Labs, Inc.
