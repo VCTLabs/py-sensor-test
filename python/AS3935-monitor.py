@@ -30,11 +30,15 @@ GPIO.setmode(GPIO.BCM)
 sensor = RPi_AS3935(address=0x03, bus=1)
 
 ## Uncomment to reset all registers to factory default values.
-##sensor.reset()
+sensor.reset()
 
-sensor.calibrate(tun_cap=0x0F)
+sensor.calibrate(tun_cap=0x03)
+time.sleep(0.002)
 sensor.set_indoors(True)
 sensor.set_noise_floor(0)
+
+## uncomment/set to filter out false positives
+sensor.set_min_strikes(5)
 
 def handle_interrupt(channel):
     time.sleep(0.003)
@@ -47,15 +51,14 @@ def handle_interrupt(channel):
         print("Disturber detected - masking")
         sensor.set_mask_disturber(True)
     elif reason == 0x08:
-        now = datetime.now().strftime('%H:%M:%S - %Y/%m/%d')
+        now = datetime.now()
         distance = sensor.get_distance()
-        if distance < 3:
-            print("Overhead lightning detected - distance = " + str(distance) + " kms) (%s)") % now
+        if distance < 2:
+            print("Overhead lightning detected - distance = " + str(distance) + " km at %s ") % now.strftime("%H:%M:%S.%f")[:-3],now.strftime("%Y-%m-%d")
         elif distance > 40:
-            print("Distant lightning detected - distance = " + str(distance) + " kms) (%s)") % now
+            print("Distant lightning detected - distance = " + str(distance) + " kms at %s") % now.strftime("%H:%M:%S.%f")[:-3],now.strftime("%Y-%m-%d")
         else:
-            print("Lightning detected - distance = " + str(distance) + " kms) (%s)") % now
-        print("")
+            print("Lightning detected - distance = " + str(distance) + " kms at %s") % now.strftime("%H:%M:%S.%f")[:-3],now.strftime("%Y-%m-%d")
 
 irq_pin = 17
 cs_pin = 24
