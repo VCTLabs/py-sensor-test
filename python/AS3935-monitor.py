@@ -53,12 +53,14 @@ def handle_interrupt(channel):
     elif reason == 0x08:
         now = datetime.now()
         distance = sensor.get_distance()
-        if distance < 2:
+        if distance == 1:
             print("Overhead lightning detected - distance = " + str(distance) + " km at %s ") % now.strftime("%H:%M:%S.%f")[:-3],now.strftime("%Y-%m-%d")
-        elif distance > 40:
+        elif 40 < distance < 63:
             print("Distant lightning detected - distance = " + str(distance) + " kms at %s") % now.strftime("%H:%M:%S.%f")[:-3],now.strftime("%Y-%m-%d")
-        else:
+        elif 2 <= distance <= 40:
             print("Lightning detected - distance = " + str(distance) + " kms at %s") % now.strftime("%H:%M:%S.%f")[:-3],now.strftime("%Y-%m-%d")
+        else:
+            print("Invalid data; distance out of range.")
 
 irq_pin = 17
 cs_pin = 24
