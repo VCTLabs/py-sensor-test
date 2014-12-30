@@ -74,14 +74,10 @@ def get_raw_data():
     return data
 
 def log_raw_data(data):
-    version = 01
-    temp = data['BMP_TEMP']
-    pres = data['BMP_PRES']
-    hum = data['SHT_HUM']
-    dew = data['SHT_DEW']
-    bmpstring = str(pres)+" "+str(temp)
-    shtstring = str(hum)+" "+str(dew)
-    outstring = str(version)+" "+str(timestamp)+" "+bmpstring+" "+shtstring+"\n"
+    version = '01'
+    bmpstring = str(data['BMP_PRES'])+" "+str(data['BMP_TEMP'])
+    shtstring = str(data['SHT_HUM'])+" "+str(data['SHT_DEW')
+    outstring = version+" "+str(timestamp)+" "+bmpstring+" "+shtstring+"\n"
     f.write(outstring)
     f.flush
 
