@@ -22,6 +22,8 @@ from sht1x.Sht1x import Sht1x as SHT1x
 
 import time
 from datetime import datetime
+from os import system
+from RPi.GPIO import cleanup
 
 ## SHT1x setup; pin numbers in RPi.GPIO module are physical pin positions
 dataPin = 3
@@ -32,8 +34,10 @@ sht1x = SHT1x(dataPin, clkPin, SHT1x.GPIO_BOARD)
 bmp085 = BMP085.BMP085(mode=BMP085.BMP085_HIGHRES)
 #bmp085 = BMP085.BMP085()
 
-global verbose
+global verbose,outstring,recname
 verbose = True
+outstring=''
+recname="wxdata.dsp"
 
 def readBmp085():
     temperature = bmp085.read_temperature()
@@ -74,12 +78,22 @@ def get_raw_data():
     return data
 
 def log_raw_data(data):
+    global outstring
     version = '01'
     bmpstring = str(data['BMP_PRES'])+" "+str(data['BMP_TEMP'])
-    shtstring = str(data['SHT_HUM'])+" "+str(data['SHT_DEW')
+    shtstring = str(data['SHT_HUM'])+" "+str(data['SHT_DEW'])
     outstring = version+" "+str(timestamp)+" "+bmpstring+" "+shtstring+"\n"
     f.write(outstring)
     f.flush
+
+def write_display_record():
+    global outstring,recname
+    tf=open("temp_data.txt",'w')
+    tf.write(outstring)
+    tf.close()
+    time.sleep(.5)
+    cmd="mv temp_data.txt " + recname
+    system(cmd)  
 
 running = True
 
@@ -88,10 +102,12 @@ try:
     print("  Monitor Status: ONLINE")
     ## log raw data to file
     f=open('SensorStick-data.txt','a')
+    cleanup()  # playing it safe for BMP
 
     while running:
         data = get_raw_data()
         log_raw_data(data)
+        write_display_record()
         time.sleep(10.0)
 
 except KeyboardInterrupt:
@@ -100,3 +116,4 @@ except KeyboardInterrupt:
 
 finally:
     f.close()
+    cleanup()   # playing it safe for possible other applications
