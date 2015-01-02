@@ -12,10 +12,10 @@ Copyright 2014 Vanguard Computer Technology Labs, Inc.
 import RPi.GPIO as GPIO
 
 # Constant orientation lookup table for wind direction, 0th and 31st indexes are invalid.
-direction_orientation = ( -1,   0,  72, 12, 144, 132,  84, 120,
-                         216, 348, 204, 24, 156, 168, 192, 180,
-                         288, 300,  60, 48, 276, 312,  96, 108,
-                         228, 336, 240, 36, 264, 324, 252,  -1)
+direction_orientation = (None,   0,  72, 12, 144, 132,  84, 120,
+                          216, 348, 204, 24, 156, 168, 192, 180,
+                          288, 300,  60, 48, 276, 312,  96, 108,
+                          228, 336, 240, 36, 264, 324, 252, None)
 
 # GPIO sensor bits for wind direction.
 direction_pins = (11, # bit 0
@@ -39,12 +39,18 @@ def get_direction():
     try:
         return direction_orientation[result]
     except IndexError:
-        return -1
+        return None
 
 def finalize():
     GPIO.cleanup()
 
 if __name__ == '__main__':
     initialize()
-    print "Wind direction:", get_direction(), "degrees"
+    direction = get_direction()
+
+    if direction is None:
+        print "Error: Unable to get wind direction."
+    else:
+        print "Wind direction:", direction, "degrees"
+
     finalize()
