@@ -22,6 +22,9 @@ from sht1x.Sht1x import Sht1x as SHT1x
 
 import time
 from datetime import datetime
+from os import system
+from RPi.GPIO import cleanup
+import json
 
 ## SHT1x setup; pin numbers in RPi.GPIO module are physical pin positions
 dataPin = 3
@@ -32,8 +35,13 @@ sht1x = SHT1x(dataPin, clkPin, SHT1x.GPIO_BOARD)
 bmp085 = BMP085.BMP085(mode=BMP085.BMP085_HIGHRES)
 #bmp085 = BMP085.BMP085()
 
-global verbose
+global verbose,timestamp,version
+global jsout,jfilename
 verbose = True
+timestamp = ''
+version='01'
+jsout={}
+jfilename="wxdata.json"
 
 def readBmp085():
     temperature = bmp085.read_temperature()
@@ -74,12 +82,34 @@ def get_raw_data():
     return data
 
 def log_raw_data(data):
-    version = '01'
+    global version,timestamp
     bmpstring = str(data['BMP_PRES'])+" "+str(data['BMP_TEMP'])
-    shtstring = str(data['SHT_HUM'])+" "+str(data['SHT_DEW')
+    shtstring = str(data['SHT_HUM'])+" "+str(data['SHT_DEW'])
     outstring = version+" "+str(timestamp)+" "+bmpstring+" "+shtstring+"\n"
     f.write(outstring)
     f.flush
+
+def write_display_record(data):
+    global jsout,jfilename
+    tf=open("temp_data.txt",'w') 
+    ver=version
+    tm=timestamp
+    bprs=str(data['BMP_PRES'])
+    btmp=str(data['BMP_TEMP'])
+    shum=str(data['SHT_HUM'])
+    shdw=str(data['SHT_DEW'])
+    jsout.update({ "ver-tag"   : ver,
+                   "time-tag"  : tm,
+                   "bmp-pres"  : bprs,
+                   "bmp-temp"  : btmp,
+                   "sht-hum"   : shum,
+                   "sht-dew"   : shdw
+                  })  
+    json.dump(jsout,tf)
+    tf.close()
+    time.sleep(.5)
+    cmd="mv temp_data.txt " + jfilename
+    system(cmd)  
 
 running = True
 
@@ -88,11 +118,13 @@ try:
     print("  Monitor Status: ONLINE")
     ## log raw data to file
     f=open('SensorStick-data.txt','a')
+    cleanup()  # playing it safe for BMP
 
     while running:
         data = get_raw_data()
         log_raw_data(data)
-        time.sleep(10.0)
+        write_display_record(data)
+        time.sleep(2.0)
 
 except KeyboardInterrupt:
     print("  Monitor Status: OFFLINE")
@@ -100,3 +132,4 @@ except KeyboardInterrupt:
 
 finally:
     f.close()
+    cleanup()   # playing it safe for possible other applications
