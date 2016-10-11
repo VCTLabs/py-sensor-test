@@ -23,17 +23,18 @@ from sht1x.Sht1x import Sht1x as SHT1x
 import time
 from datetime import datetime
 from os import system
-from RPi.GPIO import cleanup
+import RPi.GPIO as GPIO
 import json
 
 ## SHT1x setup; pin numbers in RPi.GPIO module are physical pin positions
 dataPin = 3
 clkPin = 5
-sht1x = SHT1x(dataPin, clkPin, SHT1x.GPIO_BOARD)
+gpioMode = GPIO.BOARD
+sht1x = SHT1x(dataPin, clkPin)
 
 ## BMP085 setup; default mode is STANDARD
-bmp085 = BMP085.BMP085(mode=BMP085.BMP085_HIGHRES)
-#bmp085 = BMP085.BMP085()
+#bmp085 = BMP085.BMP085(mode=BMP085.BMP085_HIGHRES)
+bmp085 = BMP085.BMP085()
 
 global verbose,timestamp,version
 global jsout,jfilename
@@ -118,7 +119,6 @@ try:
     print("  Monitor Status: ONLINE")
     ## log raw data to file
     f=open('SensorStick-data.txt','a')
-    cleanup()  # playing it safe for BMP
 
     while running:
         data = get_raw_data()
@@ -132,4 +132,4 @@ except KeyboardInterrupt:
 
 finally:
     f.close()
-    cleanup()   # playing it safe for possible other applications
+    GPIO.cleanup()   # playing it safe for possible other applications
