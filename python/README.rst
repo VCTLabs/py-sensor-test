@@ -41,7 +41,7 @@ Install some tools and Python dependencies::
 
  $ sudo -i
  # apt-get update
- # apt-get install git build-essential python-dev python-smbus libi2c-dev python-pip git
+ # apt-get install git build-essential python-dev python-smbus libi2c-dev python-pip
  # apt-get build-dep python-rpi.gpio
  # pip install git+https://github.com/VCTLabs/RPi.GPIO#egg=RPi.GPIO
  # git clone https://github.com/adafruit/Adafruit_Python_GPIO.git
