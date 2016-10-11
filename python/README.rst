@@ -1,17 +1,26 @@
 Python test code and modules for SensorStick
 ============================================
 
-The manual install can get tricky, depending on which python install
-tools or deb packages are used.  Avoid easy_install-foo* and pip, use
-the setup.py install method below, and everything *should* end up in
-the dist packages dir:
+Things are getting worse, made debs from apt-get source this time, ported
+the RPi.GPIO and sht1x patches, rolled back on AadFruit_BMP/GPIO to avoid
+the pureio beta stuff and stick with python-smbus.  Tthe following *should*
+work on a fresh Raspbian install without rebuilding debs from source.
+
+For manual install of VCT forks of RPi.GPIO and rpisht1x, use:
+
+https://github.com/VCTLabs/RPi.GPIO.git  branch: sf-062
+
+https://github.com/VCTLabs/rpisht1x.git branch master
+
+For manual installs of AdaFruit_Blah, use these commits:
+
+Adafruit_Python_GPIO - 973745604bbb2f6a4094caabf3eb99098db2d3b8
+
+Adafruit_Python_BMP - fe36075719d0f599305bf10d745fe81eb0fd52f6
+
+These packages should still end up in:
 
 /usr/local/lib/python2.7/dist-packages/
-
-The setup scripts will install required dependencies; everything
-should work, with the caveat below that the rpiSHT1x library plays
-havoc with I2C, so you need the VCT github version with a nicer
-approach to handling GPIO pins.
 
 For a fresh raspbian image, you should set your locale/keyboard/timezone
 (using raspi-config) since everything defaults to GB/UK english, etc.
@@ -25,20 +34,32 @@ First install the python test code for the three sensors on the SensorStick::
  # git clone https://github.com/VCTLabs/pi-sensor-test.git
  # cp pi-sensor-test/python/*.py /usr/local/bin/
 
+Build Dependencies
+==================
+
+Install some tools and Python dependencies::
+
+ $ sudo -i
+ # apt-get update
+ # apt-get install git build-essential python-dev python-smbus libi2c-dev python-pip git
+ # apt-get build-dep python-rpi.gpio
+ # pip install git+https://github.com/VCTLabs/RPi.GPIO#egg=RPi.GPIO
+ # git clone https://github.com/adafruit/Adafruit_Python_GPIO.git
+ # git clone https://github.com/adafruit/Adafruit_Python_BMP.git
+ # cd Adafruit_Python_GPIO
+ # git checkout 973745604bbb2f6a4094caabf3eb99098db2d3b8
+ # python2 setup.py install
+ # cd ../Adafruit_Python_BMP/
+ # git checkout fe36075719d0f599305bf10d745fe81eb0fd52f6
+ # python2 setup.py install
+ # exit
+
 BMP085 Sensor Support
 =====================
 
-Install some tools/dependencies and the BMP library::
-
- # apt-get update
- # apt-get install git build-essential python-dev python-smbus libi2c-dev
- # git clone https://github.com/adafruit/Adafruit_Python_BMP.git
- # cd Adafruit_Python_BMP
- # python setup.py install
-
 Test BMP library and sensor::
 
- # bmp085-test.py
+ $ sudo bmp085-test.py
 
 Expected output, should be "reasonable"::
 
@@ -52,23 +73,26 @@ SHT10 and MPU6050 Sensor Support
 
 Install SHT10 library::
 
- # wget https://pypi.python.org/packages/source/r/rpiSht1x/rpiSht1x-1.2.tar.gz
- # tar xvzf rpiSht1x-1.2.tar.gz
- # cd rpiSht1x-1.2/
+ # git clone https://github.com/VCTLabs/rpisht1x.git
+ # cd rpiSht1x/src
  # python setup.py install
 
 Test SHT10 library and sensor::
 
- # Sht1x-test.py
+ $ sudo Sht1x-test.py
 
 Expected output should be reasonable, although there may be some warnings::
 
  Temperature: 18.17 Humidity: 71.220730568 Dew Point: 12.8707463473
 
+.. note:: If you get an error message or no output running any script
+          after running the Sht1x-test.py script, try running the
+          SensorStick monitor script to clean up the pin config.
+
 Since you already installed python-smbus, you should be ready to go;
 now test the MPU smbus interface and sensor::
 
- # mpu-6050.py
+ $ sudo mpu6050-test.py
 
 Expected output so far is just gyro/accel, with no temperature output::
 
