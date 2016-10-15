@@ -44,14 +44,8 @@ Install some tools and Python dependencies::
  # apt-get install git build-essential python-dev python-smbus libi2c-dev python-pip
  # apt-get build-dep python-rpi.gpio
  # pip install git+https://github.com/VCTLabs/RPi.GPIO#egg=RPi.GPIO
- # git clone https://github.com/adafruit/Adafruit_Python_GPIO.git
- # git clone https://github.com/adafruit/Adafruit_Python_BMP.git
- # cd Adafruit_Python_GPIO
- # git checkout 973745604bbb2f6a4094caabf3eb99098db2d3b8
- # python2 setup.py install
- # cd ../Adafruit_Python_BMP/
- # git checkout fe36075719d0f599305bf10d745fe81eb0fd52f6
- # python2 setup.py install
+ # pip install git+https://github.com/adafruit/Adafruit_Python_GPIO@973745604bbb2f6a4094caabf3eb99098db2d3b8#egg=Adafruit_GPIO
+ # pip install git+https://github.com/adafruit/Adafruit_Python_BMP@fe36075719d0f599305bf10d745fe81eb0fd52f6#egg=Adafruit_BMP
  # exit
 
 BMP085 Sensor Support
