@@ -67,9 +67,7 @@ SHT10 and MPU6050 Sensor Support
 
 Install SHT10 library::
 
- # git clone https://github.com/VCTLabs/rpisht1x.git
- # cd rpiSht1x/src
- # python setup.py install
+ # pip install git+https://github.com/VCTLabs/rpisht1x#egg=rpiSht1x
 
 Test SHT10 library and sensor::
 
